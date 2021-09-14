@@ -13,6 +13,10 @@ bundle agent migrate2rocky
         expression => and( regline( "^Complete!$", "$(log_file)" ),
                            regline( "^Done, please reboot your system.$", "$(log_file)" ),
                            isnewerthan( $(log_file), "/proc/1" ));
+  packages:
+    centos_8::
+      "git" -> { "promise-type-git" }
+        policy => "present";
 
   git:
     centos_8::
