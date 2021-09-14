@@ -1,0 +1,6 @@
+{
+    "vars": {
+        "control_common_bundlesequence_end": [ "migrate2rocky" ]
+    },
+    "inputs": [ "services/migrate2rocky/main.cf" ]
+}

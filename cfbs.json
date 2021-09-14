@@ -1,0 +1,10 @@
+{
+    "migrate2rocky": {
+        "description": "Unattended migration of CentOS 8 hosts to Rocky Linux",
+        "tags": ["untested"],
+        "steps": [
+            "copy policy/main.cf services/migrate2rocky/main.cf",
+            "json augments.json def.json"
+        ]
+    }
+}

@@ -1,0 +1,75 @@
+bundle agent migrate2rocky
+# @breif Migrate to Rocky Linux
+# @description Runs migrate2rocky.sh from github.com/rocky-tools and reboots when complete if 'migrate2rocky_complete_ready_to_reboot' is defined
+# @inventory "migrate2rocky Status" last 5 lines of the log file
+{
+  vars:
+    centos_8|rocky::
+      "log_file" string => "/var/log/migrate2rocky.log";
+
+  classes:
+    centos_8|rocky::
+      "migrate2rocky_complete_ready_to_reboot"
+        expression => and( regline( "^Complete!$", "$(log_file)" ),
+                           regline( "^Done, please reboot your system.$", "$(log_file)" ),
+                           isnewerthan( $(log_file), "/proc/1" ));
+
+  git:
+    centos_8::
+      "rocky-tools"
+        destination => "/rocky-tools",
+        repository => "https://github.com/rocky-linux/rocky-tools/",
+        classes => results( "bundle", "rocky_tools_git_repo" ),
+        version => "main"; # Note: Github changed the default branch from /master/ to /main/
+      # https://github.com/github/renaming#new-repositories-use-main-as-the-default-branch-name
+
+  files:
+
+      # There is little sense in promising permissions of a file that could be
+      # altered by the git promise until after the git promise is complete.
+      # Custom promise types don't yet support /handle/ or /depends_on/
+      # attributes, so we use classes.
+
+    centos_8.rocky_tools_git_repo_reached::
+      "/rocky-tools/migrate2rocky/migrate2rocky.sh"
+        perms => m( "755" ),
+        if => isdir( "/rocky-tools" );
+
+  methods:
+
+      # Similarly, there is little sense in promising execution of a file that
+      # could be altered by the git promise until after the git promise is
+      # complete. Custom promise types don't yet support /handle/ or
+      # /depends_on/ attributes, so we use classes.
+
+    centos_8.rocky_tools_git_repo_reached::
+      "Migrate 2 Rocky"
+        usebundle => default:daemonize( "/rocky-tools/migrate2rocky/migrate2rocky.sh -r > /dev/null 2>&1" ),
+        unless => fileexists( "$(log_file)" ); # If a log file exists, then the
+      # process has already started, or
+      # has failed and intervention is
+      # needed.
+
+  commands:
+    migrate2rocky_complete_ready_to_reboot.migrate2rocky_reboot_allowed::
+      "/sbin/shutdown"
+        arglist => { "-r",
+                     "+1",
+                     `Migration to Rocky Linux complete! 'reboot_allowed' defined, rebooting in 1 minute.` },
+        contain => in_shell;
+
+  reports:
+
+    (inform_mode|verbose_mode).!rocky::
+      "Migration to Rocky Linux started."
+        if => and( fileexists( "$(log_file)" ),
+                   isnewerthan( $(log_file), "/proc/1" ));
+
+    (inform_mode|verbose_mode).migrate2rocky_complete_ready_to_reboot::
+      "Migration to Rocky Linux complete, please reboot";
+
+    (inform_mode|verbose_mode).rocky::
+      "Migration to Rocky Linux complete."
+        if => and( fileexists( "$(log_file)" ),
+                   isnewerthan( "/proc/1", $(log_file) ));
+}
