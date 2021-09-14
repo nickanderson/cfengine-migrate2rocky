@@ -11,6 +11,14 @@ Note: This policy uses the custom [[https://github.com/cfengine/modules/tree/mas
 
 * Example installation with cfbs
 
+#+begin_src sh :results output :exports both
+  cfbs add masterfiles
+  cfbs add migrate2rocky
+  cfbs build
+#+end_src
+
+** Example output
+
 #+begin_example
   [root@localhost ~]# cat /etc/os-release
   NAME="CentOS Linux"
