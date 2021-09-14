@@ -49,10 +49,12 @@ bundle agent migrate2rocky
     centos_8.rocky_tools_git_repo_reached::
       "Migrate 2 Rocky"
         usebundle => default:daemonize( "/rocky-tools/migrate2rocky/migrate2rocky.sh -r > /dev/null 2>&1" ),
-        unless => fileexists( "$(log_file)" ); # If a log file exists, then the
-      # process has already started, or
-      # has failed and intervention is
-      # needed.
+        if => and( isexecutable("/rocky-tools/migrate2rocky/migrate2rocky.sh" ),
+                   not( fileexists( "$(log_file)" ))); # If a log file exists,
+                                                       # then the process has
+                                                       # already started, or has
+                                                       # failed and intervention
+                                                       # is needed.
 
   commands:
     migrate2rocky_complete_ready_to_reboot.migrate2rocky_reboot_allowed::
