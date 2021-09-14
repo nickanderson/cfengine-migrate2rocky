@@ -71,8 +71,8 @@ bundle agent migrate2rocky
         if => and( fileexists( "$(log_file)" ),
                    isnewerthan( $(log_file), "/proc/1" ));
 
-    (inform_mode|verbose_mode).migrate2rocky_complete_ready_to_reboot::
-      "Migration to Rocky Linux complete, please reboot";
+    (inform_mode|verbose_mode).migrate2rocky_complete_ready_to_reboot.!migrate2rocky_reboot_allowed::
+      "Migration to Rocky Linux complete, 'migrate2rocky_reboot_allowed' not defined, please reboot.";
 
     (inform_mode|verbose_mode).rocky::
       "Migration to Rocky Linux complete."
