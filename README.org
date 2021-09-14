@@ -6,7 +6,7 @@ Approaching CentOS 8 End of Life (2022)?
 
 This policy migrates your hosts to Rocky Linux using the [[https://github.com/rocky-linux/rocky-tools/tree/main/migrate2rocky][~migrate2rocky.sh~ script from the rocky-tools repository]].
 
-Note: This policy uses the custom [[https://github.com/cfengine/modules/tree/master/promise_types/git][/git/ promise type]]. You will need to install that first. Also note, [[https://github.com/cfengine/cfbs][~cfbs~]] makes managing  your policy and dependencies.
+Note: This policy uses the custom [[https://github.com/cfengine/modules/tree/master/promise_types/git][/git/ promise type]]. You will need to install that first. Also note, [[https://github.com/cfengine/cfbs][~cfbs~]] makes managing  your policy and dependencies easy.
 
 
 * Example installation with cfbs
