@@ -1,10 +1,16 @@
 {
+  "name": "migrate2rocky",
+  "description": "Unattended migration of CentOS 8 hosts to Rocky Linux",
+  "provides": {
     "migrate2rocky": {
-        "description": "Unattended migration of CentOS 8 hosts to Rocky Linux",
-        "tags": ["untested"],
-        "steps": [
-            "copy policy/main.cf services/migrate2rocky/main.cf",
-            "json augments.json def.json"
-        ]
+      "description": "Unattended migration of CentOS 8 hosts to Rocky Linux",
+      "repo": "https://github.com/nickanderson/cfengine-migrate2rocky",
+      "by": "https://github.com/nickanderson/",
+      "tags": ["untested"],
+      "steps": [
+        "copy policy/main.cf services/migrate2rocky/main.cf",
+        "json augments.json def.json"
+      ]
     }
+  }
 }
